@@ -28,7 +28,7 @@ pipeline {
 
         stage('Terraform Apply') {
             when {
-                branch 'learning'
+                branch 'learing-007'
             }
             steps {
                 input message: 'Approve Terraform apply?', ok: 'Apply'
