@@ -16,13 +16,20 @@ pipeline {
 
         stage('Terraform Validate') {
             steps {
-                sh 'terraform validate'
+                script {
+                    def output = sh(script: 'terraform validate', returnStatus: true)
+                    if (output != 0) {
+                        error("❌ Terraform validation failed.")
+                    } else {
+                        echo "✅ Terraform validation passed."
+                    }
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
+                sh 'terraform plan -out=tfplan.out'
             }
         }
 
@@ -32,8 +39,17 @@ pipeline {
             }
             steps {
                 input message: 'Approve Terraform apply?', ok: 'Apply'
-                sh 'terraform apply -auto-approve'
+                sh 'terraform apply -auto-approve tfplan.out'
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Pipeline completed successfully.'
+        }
+        failure {
+            echo '❌ Pipeline failed.'
         }
     }
 }
