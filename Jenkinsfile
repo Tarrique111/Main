@@ -1,55 +1,45 @@
 pipeline {
-    agent any
+  agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Terraform Init') {
-            steps {
-                sh 'terraform init'
-            }
-        }
-
-        stage('Terraform Validate') {
-            steps {
-                script {
-                    def output = sh(script: 'terraform validate', returnStatus: true)
-                    if (output != 0) {
-                        error("❌ Terraform validation failed.")
-                    } else {
-                        echo "✅ Terraform validation passed."
-                    }
-                }
-            }
-        }
-
-        stage('Terraform Plan') {
-            steps {
-                sh 'terraform plan -out=tfplan.out'
-            }
-        }
-
-        stage('Terraform Apply') {
-            when {
-                branch 'learing-007'
-            }
-            steps {
-                input message: 'Approve Terraform apply?', ok: 'Apply'
-                sh 'terraform apply -auto-approve tfplan.out'
-            }
-        }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
 
-    post {
-        success {
-            echo '✅ Pipeline completed successfully.'
-        }
-        failure {
-            echo '❌ Pipeline failed.'
-        }
+    stage('Init Terraform') {
+      steps {
+        sh 'terraform init'
+      }
     }
+
+    stage('Validate Terraform') {
+      steps {
+        sh 'terraform validate'
+      }
+    }
+
+    stage('Plan Terraform') {
+      steps {
+        sh 'terraform plan -out=tfplan'
+      }
+    }
+
+    stage('Apply Terraform') {
+      steps {
+        input message: "Apply the Terraform plan?"
+        sh 'terraform apply -auto-approve tfplan'
+      }
+    }
+  }
+
+  post {
+    always {
+      echo 'Pipeline finished.'
+    }
+    failure {
+      echo 'Pipeline failed.'
+    }
+  }
 }
