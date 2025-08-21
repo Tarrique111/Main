@@ -10,14 +10,13 @@ terraform {
 }
 
 provider "aws" {
-  region = "ap-south-1"  # Change to your desired AWS region
+  region = "us-east-1"  # Change to your desired AWS region
 }
-
 resource "aws_instance" "example" {
   ami           = "ami-0d0ad8bb301edb745" 
   instance_type = "t3.micro"
 
   tags = {
-    Name = "Terraform-Example"
+    Name = "Jenkins_Server"
   }
 }
