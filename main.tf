@@ -13,10 +13,10 @@ provider "aws" {
   region = "us-east-1"  # Change to your desired AWS region
 }
 resource "aws_instance" "example" {
-  ami           = "ami-0d0ad8bb301edb745" 
-  instance_type = "t3.micro"
+  ami           = "ami-00ca32bbc84273381" 
+  instance_type = "c7i-flex.large"
 
   tags = {
-    Name = "Jenkins_Server"
+    Name = "test"
   }
 }
