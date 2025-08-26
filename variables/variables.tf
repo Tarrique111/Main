@@ -1,16 +1,16 @@
 variable "aws_region" {
   description = "AWS region where resources will be created"
-  default     = "us-east-1"
+  default     = "ap-south-1"
 }
 
 variable "instance_type" {
   description = "Type of EC2 instance"
-  default     = "c7i-flex.large"
+  default     = "t2.micro"
 }
 
 variable "server_name" {
   description = "Name of the EC2 server"
-  default     = "my-server"
+  default     = "my-server-2"
 }
 
 variable "server_count" {
